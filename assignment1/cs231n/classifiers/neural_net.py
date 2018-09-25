@@ -14,9 +14,6 @@ def softmax(scores, y):
 
     return -np.log(np.exp(scores[np.arange(len(scores)), y]) / np.sum(np.exp(scores), axis=1))
 
-def norm2(W):
-    return np.sqrt(np.sum(W*W))
-
 
 class TwoLayerNet(object):
   """
