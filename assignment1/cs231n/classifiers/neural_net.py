@@ -3,6 +3,21 @@ from __future__ import print_function
 import numpy as np
 import matplotlib.pyplot as plt
 
+
+def relu(h):
+    h[h < 0] = 0
+    return h
+
+def softmax(scores, y):
+    # FIX: Numeric problem, potential blowup
+    scores -= np.max(scores, axis=1).reshape(scores.shape[0], 1)
+
+    return -np.log(np.exp(scores[np.arange(len(scores)), y]) / np.sum(np.exp(scores), axis=1))
+
+def norm2(W):
+    return np.sqrt(np.sum(W*W))
+
+
 class TwoLayerNet(object):
   """
   A two-layer fully-connected neural network. The net has an input dimension of
@@ -75,8 +90,11 @@ class TwoLayerNet(object):
     # Store the result in the scores variable, which should be an array of      #
     # shape (N, C).                                                             #
     #############################################################################
-    pass
-    #############################################################################
+    a1 = relu(np.dot(X, W1) + b1)
+    scores = np.dot(a1, W2) + b2
+    print(a1.shape)
+    print(scores.shape)
+    ############################################################################
     #                              END OF YOUR CODE                             #
     #############################################################################
     
@@ -92,7 +110,11 @@ class TwoLayerNet(object):
     # in the variable loss, which should be a scalar. Use the Softmax           #
     # classifier loss.                                                          #
     #############################################################################
-    pass
+
+    loss = softmax(scores, y)
+    loss = np.sum(loss)
+    loss /= N
+    loss += reg * (np.sum(W1*W1) + np.sum(W2*W2) + np.sum(b1*b1) + np.sum(b2*b2))
     #############################################################################
     #                              END OF YOUR CODE                             #
     #############################################################################
